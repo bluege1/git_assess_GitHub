@@ -65,7 +65,13 @@ copy .env.example .env
 
 见上一节。未配置 `.env` 时前后端启动会报错提示。
 
-### 2. 启动后端
+### 2. 选择启动方式
+
+#### 方式一：使用本地后端
+
+适用于需要本地开发、调试后端代码的场景。
+
+**步骤 1：启动本地后端**
 
 ```powershell
 cd backend
@@ -86,7 +92,7 @@ export JAVA_HOME=/path/to/jdk-17
 
 启动成功后控制台出现：`Started AssessApplication`，端口为 `.env` 中的 `SERVER_PORT`。
 
-### 3. 启动前端
+**步骤 2：启动前端**
 
 新开一个终端：
 
@@ -97,6 +103,34 @@ npm run dev
 ```
 
 浏览器访问 `.env` 中 `FRONTEND_PORT` 对应地址（默认 5173）。
+
+---
+
+#### 方式二：使用服务器后端
+
+适用于使用远程服务器上已部署的 Docker 后端，无需本地启动后端服务。
+
+**步骤 1：配置服务器地址**
+
+在项目根目录 `.env` 文件中设置：
+
+```powershell
+BACKEND_TARGET=remote
+BACKEND_REMOTE_HOST=your-server-ip
+BACKEND_REMOTE_PORT=9019
+```
+
+**步骤 2：启动前端**
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+浏览器访问 `.env` 中 `FRONTEND_PORT` 对应地址（默认 5173）。
+
+前端启动时控制台会打印当前代理目标，例如 `[vite] BACKEND_TARGET=remote -> http://x.x.x.x:9019`。
 
 ## 联调验证
 
