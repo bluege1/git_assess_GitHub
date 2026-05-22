@@ -1,13 +1,10 @@
 package com.assess.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import java.time.LocalDateTime;
 
 public class LabAssessRequest {
 
@@ -32,8 +29,8 @@ public class LabAssessRequest {
     @Max(3)
     private Integer dataManagementResult = 0;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime assessmentTime;
+    /** 前端 datetime-local，如 2026-05-22T16:30 */
+    private String assessmentTime;
 
     @Size(max = 50, message = "考核人长度不能超过50")
     private String assessor;
@@ -78,11 +75,11 @@ public class LabAssessRequest {
         this.dataManagementResult = dataManagementResult;
     }
 
-    public LocalDateTime getAssessmentTime() {
+    public String getAssessmentTime() {
         return assessmentTime;
     }
 
-    public void setAssessmentTime(LocalDateTime assessmentTime) {
+    public void setAssessmentTime(String assessmentTime) {
         this.assessmentTime = assessmentTime;
     }
 

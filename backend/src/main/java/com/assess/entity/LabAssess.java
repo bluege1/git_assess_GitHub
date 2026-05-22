@@ -1,6 +1,8 @@
 package com.assess.entity;
 
+import com.assess.config.NaiveLocalDateTimeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,7 +34,8 @@ public class LabAssess {
     @Column(name = "data_management_result")
     private Integer dataManagementResult = 0;
 
-    @Column(name = "assessment_time")
+    @Convert(converter = NaiveLocalDateTimeConverter.class)
+    @Column(name = "assessment_time", columnDefinition = "datetime")
     private LocalDateTime assessmentTime;
 
     @Column(length = 50)

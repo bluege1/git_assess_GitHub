@@ -1,9 +1,0 @@
-.env
-.env.*
-!.env.example
-README.md
-.git
-.gitignore
-docker-compose*.yml
-build.ps1
-build.sh

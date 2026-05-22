@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useToast } from '../composables/useToast'
 
 interface ApiError {
   status: string
@@ -40,19 +41,15 @@ const assessForm = ref<AssessForm>({
 })
 
 const submitLoading = ref(false)
-const assessError = ref('')
-const assessSuccess = ref('')
+const toast = useToast()
 
 async function submitAssess() {
   if (!assessForm.value.name.trim()) {
-    assessError.value = '请填写姓名'
-    assessSuccess.value = ''
+    toast.show('请填写姓名', 'error')
     return
   }
 
   submitLoading.value = true
-  assessError.value = ''
-  assessSuccess.value = ''
 
   try {
     const res = await fetch('/api/assess', {
@@ -72,9 +69,9 @@ async function submitAssess() {
       const err = (await res.json().catch(() => null)) as ApiError | null
       throw new Error(err?.message ?? `HTTP ${res.status}`)
     }
-    assessSuccess.value = '保存成功'
+    toast.show('保存成功', 'success')
   } catch (e) {
-    assessError.value = e instanceof Error ? e.message : '保存失败'
+    toast.show(e instanceof Error ? e.message : '保存失败', 'error', 4000)
   } finally {
     submitLoading.value = false
   }
@@ -84,9 +81,6 @@ async function submitAssess() {
 <template>
   <div class="page">
     <h1>成员考核信息</h1>
-
-    <p v-if="assessError" class="msg error">{{ assessError }}</p>
-    <p v-if="assessSuccess" class="msg success">{{ assessSuccess }}</p>
 
     <form class="assess-form" @submit.prevent="submitAssess">
       <label class="field">
@@ -162,25 +156,6 @@ async function submitAssess() {
 h1 {
   font-size: 1.25rem;
   margin-bottom: 24px;
-}
-
-.msg {
-  margin: 0 0 16px;
-  padding: 10px 12px;
-  border-radius: 6px;
-  font-size: 0.875rem;
-}
-
-.msg.error {
-  color: #b91c1c;
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
-}
-
-.msg.success {
-  color: #15803d;
-  background: #f0fdf4;
-  border: 1px solid #86efac;
 }
 
 .assess-form {

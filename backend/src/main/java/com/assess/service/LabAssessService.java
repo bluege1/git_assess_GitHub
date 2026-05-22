@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -34,9 +35,7 @@ public class LabAssessService {
         entity.setFrontendResult(defaultInt(request.getFrontendResult()));
         entity.setBackendResult(defaultInt(request.getBackendResult()));
         entity.setDataManagementResult(defaultInt(request.getDataManagementResult()));
-        entity.setAssessmentTime(
-                request.getAssessmentTime() != null ? request.getAssessmentTime() : LocalDateTime.now()
-        );
+        entity.setAssessmentTime(parseAssessmentTime(request.getAssessmentTime()));
         entity.setAssessor(blankToNull(request.getAssessor()));
 
         return LabAssessResponse.from(repository.save(entity));
@@ -51,5 +50,17 @@ public class LabAssessService {
             return null;
         }
         return value.trim();
+    }
+
+    /** 解析前端 datetime-local 字符串，不做时区换算 */
+    private static LocalDateTime parseAssessmentTime(String value) {
+        if (value == null || value.isBlank()) {
+            return LocalDateTime.now();
+        }
+        String normalized = value.trim().replace('T', ' ');
+        if (normalized.length() == 16) {
+            normalized += ":00";
+        }
+        return LocalDateTime.parse(normalized, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
